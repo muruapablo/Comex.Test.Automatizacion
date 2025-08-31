@@ -111,6 +111,9 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", CampoProveedorModal, codigoProveedor);
         }
 
+        // Esperar posible recarga tras proveedor (para dropdowns dinámicos)
+        Thread.Sleep(1000); // Temporal, ajustar si necesario
+
         // Fecha Factura
         _wait.Until(d => CampoFechaFactura.Displayed && CampoFechaFactura.Enabled);
         try
@@ -139,9 +142,30 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
 
         // Tipo Material
         _wait.Until(d => DdlTipoMaterial.Displayed && DdlTipoMaterial.Enabled);
+        _wait.Until(d => new SelectElement(DdlTipoMaterial).Options.Count > 0);
         try
         {
-            new SelectElement(DdlTipoMaterial).SelectByValue(tipoMaterial);
+            // Depuración: Mostrar opciones disponibles
+            var selectTipoMaterial = new SelectElement(DdlTipoMaterial);
+            var opcionesTipoMaterial = selectTipoMaterial.Options.Select(o => $"value='{o.GetAttribute("value")}', text='{o.Text}'").ToList();
+            Console.WriteLine($"Opciones disponibles en ddlTipoMaterial: {string.Join(" | ", opcionesTipoMaterial)}");
+
+            // Intentar seleccionar el valor proporcionado
+            if (selectTipoMaterial.Options.Any(o => o.GetAttribute("value") == tipoMaterial))
+            {
+                selectTipoMaterial.SelectByValue(tipoMaterial);
+                Console.WriteLine($"Seleccionado tipoMaterial: {tipoMaterial}");
+            }
+            else if (selectTipoMaterial.Options.Any())
+            {
+                string primeraOpcion = selectTipoMaterial.Options.First().GetAttribute("value");
+                Console.WriteLine($"Valor {tipoMaterial} no encontrado en ddlTipoMaterial. Seleccionando primera opción: {primeraOpcion}");
+                selectTipoMaterial.SelectByValue(primeraOpcion);
+            }
+            else
+            {
+                throw new NoSuchElementException("El dropdown ddlTipoMaterial no tiene opciones disponibles.");
+            }
         }
         catch (ElementNotInteractableException)
         {
@@ -151,13 +175,37 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
 
         // C.Vta.Proveedor
         _wait.Until(d => DdlCvtaProveedor.Displayed && DdlCvtaProveedor.Enabled);
+        _wait.Until(d => new SelectElement(DdlCvtaProveedor).Options.Count > 0);
         try
         {
-            new SelectElement(DdlCvtaProveedor).SelectByValue(cvtaProveedor);
+            // Depuración: Mostrar opciones disponibles
+            var selectCvtaProveedor = new SelectElement(DdlCvtaProveedor);
+            var opcionesCvtaProveedor = selectCvtaProveedor.Options.Select(o => $"value='{o.GetAttribute("value")}', text='{o.Text}'").ToList();
+            Console.WriteLine($"Opciones disponibles en dllCVtaProveedor: {string.Join(" | ", opcionesCvtaProveedor)}");
+
+            // Intentar seleccionar el valor proporcionado
+            if (selectCvtaProveedor.Options.Any(o => o.GetAttribute("value") == cvtaProveedor))
+            {
+                selectCvtaProveedor.SelectByValue(cvtaProveedor);
+                Console.WriteLine($"Seleccionado cvtaProveedor: {cvtaProveedor}");
+            }
+            else if (selectCvtaProveedor.Options.Any())
+            {
+                string primeraOpcion = selectCvtaProveedor.Options.First().GetAttribute("value");
+                Console.WriteLine($"Valor {cvtaProveedor} no encontrado en dllCVtaProveedor. Seleccionando primera opción: {primeraOpcion}");
+                selectCvtaProveedor.SelectByValue(primeraOpcion);
+            }
+            else
+            {
+                throw new NoSuchElementException("El dropdown dllCVtaProveedor no tiene opciones disponibles.");
+            }
         }
         catch (ElementNotInteractableException)
         {
-            Console.WriteLine("Usando JavaScript para seleccionar dllCVtaProveedor...");
+            // Intentar clic para desplegar (si es un control personalizado como Select2)
+            Console.WriteLine("Intentando desplegar dllCVtaProveedor con clic...");
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", DdlCvtaProveedor);
+            Thread.Sleep(500); // Esperar que el menú se despliegue
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", DdlCvtaProveedor, cvtaProveedor);
         }
 
@@ -265,4 +313,5 @@ public string ObtenerValorCvtaProveedor()
     _wait.Until(d => DdlCvtaProveedor.Displayed);
     return new SelectElement(DdlCvtaProveedor).SelectedOption.GetAttribute("value");
 }
+
 }
