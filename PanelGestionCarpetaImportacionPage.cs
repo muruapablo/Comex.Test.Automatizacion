@@ -223,16 +223,36 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
         }
 
         // Clic en "Carga Manual" para habilitar detalle de factura
-        Console.WriteLine("Pulsando botón Carga Manual...");
-        _wait.Until(d => BotonCargaManual.Displayed && BotonCargaManual.Enabled);
+        Console.WriteLine("Buscando botón Carga Manual...");
         try
         {
-            BotonCargaManual.Click();
+            // Verificar si el botón existe
+            var boton = _driver.FindElement(By.Id("CphContenido_lnkCargaManual"));
+            Console.WriteLine("Botón Carga Manual encontrado. Verificando visibilidad y estado...");
+
+            // Hacer scroll al botón
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", boton);
+            Thread.Sleep(500); // Esperar que el scroll se complete
+
+            // Esperar que el botón esté visible y habilitado
+            _wait.Until(d => boton.Displayed && boton.Enabled);
+            Console.WriteLine("Botón Carga Manual visible y habilitado. Pulsando...");
+
+            try
+            {
+                boton.Click();
+            }
+            catch (ElementNotInteractableException)
+            {
+                Console.WriteLine("Usando JavaScript para pulsar lnkCargaManual...");
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", boton);
+            }
         }
-        catch (ElementNotInteractableException)
+        catch (NoSuchElementException)
         {
-            Console.WriteLine("Usando JavaScript para pulsar lnkCargaManual...");
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", BotonCargaManual);
+            Console.WriteLine("Error: No se encontró el botón CphContenido_lnkCargaManual.");
+            ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_boton_carga_manual_no_encontrado.png");
+            throw;
         }
 
         // Esperar que el modal/sección de detalle sea visible (asumiendo un modal genérico)
@@ -250,9 +270,13 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
 
         // Guardar factura
         Console.WriteLine("Guardando factura...");
-        _wait.Until(d => BotonGuardarFactura.Displayed && BotonGuardarFactura.Enabled);
         try
         {
+            // Hacer scroll al botón Guardar
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", BotonGuardarFactura);
+            Thread.Sleep(500); // Esperar que el scroll se complete
+
+            _wait.Until(d => BotonGuardarFactura.Displayed && BotonGuardarFactura.Enabled);
             BotonGuardarFactura.Click();
         }
         catch (ElementNotInteractableException)
