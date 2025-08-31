@@ -30,6 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,12 +61,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\Downloads\PGCI Test A\PanelGestionCarpetaImportacionPage.cs">
-      <Link>PanelGestionCarpetaImportacionPage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\Downloads\PGCI Test A\PanelGestionTests.cs">
-      <Link>PanelGestionTests.cs</Link>
-    </Compile>
+    <Compile Include="PanelGestionCarpetaImportacionPage.cs" />
+    <Compile Include="PanelGestionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
