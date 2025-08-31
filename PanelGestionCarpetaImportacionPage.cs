@@ -1,5 +1,12 @@
-// Constructor con tiempo de espera de 20 segundos
-public PanelGestionCarpetaImportacionPage(IWebDriver driver)
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
+
+public class PanelGestionCarpetaImportacionPage
+{
+    private readonly IWebDriver _driver; private readonly WebDriverWait _wait;
+    // Constructor con tiempo de espera de 20 segundos
+    public PanelGestionCarpetaImportacionPage(IWebDriver driver)
 {
     _driver = driver;
     _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
@@ -257,4 +264,5 @@ public string ObtenerValorCvtaProveedor()
     Console.WriteLine("Validando C.Vta.Proveedor...");
     _wait.Until(d => DdlCvtaProveedor.Displayed);
     return new SelectElement(DdlCvtaProveedor).SelectedOption.GetAttribute("value");
+}
 }

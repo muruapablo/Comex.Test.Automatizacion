@@ -1,3 +1,6 @@
+using OpenQA.Selenium; using Microsoft.VisualStudio.TestTools.UnitTesting; using OpenQA.Selenium.Chrome; using System; using System.Threading;
+
+[TestClass] public class PanelGestionTests { private IWebDriver _driver;
 [TestInitialize]
 public void Setup()
 {
@@ -26,7 +29,7 @@ public void AlBuscarPorProveedorExistente_DeberianMostrarseResultados()
     tabImportacion.Click();
 
     Thread.Sleep(2000);
-    IWebElement linkPanelGestion = _driver.FindElement(By.XPath("//*[@id='CphContenido_panelMenu']/a[3]/span[2]"));
+    IWebElement linkPanelGestion = _driver.FindElement(By.XPath("/html/body/form/div[3]/div/div/div[2]/div[2]/a[3]"));
     linkPanelGestion.Click();
 
     Thread.Sleep(3000);
@@ -61,7 +64,7 @@ public void CrearFactura_ValidarCamposYVerificarAlReabrir()
     // 3. Seleccionar "Panel De Gestión"
     Console.WriteLine("Seleccionando Panel De Gestión...");
     Thread.Sleep(2000);
-    IWebElement linkPanelGestion = _driver.FindElement(By.XPath("//*[@id='CphContenido_panelMenu']/a[3]/span[2]"));
+    IWebElement linkPanelGestion = _driver.FindElement(By.XPath("/html/body/form/div[3]/div/div/div[2]/div[2]/a[3]"));
     linkPanelGestion.Click();
 
     // 4. Esperar carga de la página
@@ -76,18 +79,18 @@ public void CrearFactura_ValidarCamposYVerificarAlReabrir()
 
     // 7. Datos de prueba
     string numeroFactura = $"FACT_AUTO_{DateTime.Now:yyyyMMdd}"; // Ejemplo: FACT_AUTO_20250831
-    string codigoProveedor = "PROV001"; // Ajusta a un proveedor válido
-    string moneda = "USD"; // Ajusta
-    string fechaFactura = "30/08/2025"; // Formato dd/MM/yyyy
-    string tipoMaterial = "1"; // Valor de DDL, ajusta según opciones reales
-    string cvtaProveedor = "1"; // Valor esperado para validar
-    string importeFOB = "100.0000"; // Formato con 4 decimales para Total FOB
+    string codigoProveedor = "1102"; // Ajusta a un proveedor válido
+    string moneda = "040"; // Ajusta
+    string fechaFactura = ""; // Formato dd/MM/yyyy
+    string tipoMaterial = "Material Productivo"; // Valor de DDL, ajusta según opciones reales
+    string cvtaProveedor = "FOB"; // Valor esperado para validar
+    string importeFOB = ""; // Formato con 4 decimales para Total FOB
 
     // 8. Crear factura
     try
     {
         Console.WriteLine("Creando factura...");
-        panelPage.CrearFactura(codigoProveedor, numeroFactura, fechaFactura, moneda, tipoMaterial, cvtaProveedor, importeFOB);
+            panelPage.CrearFactura(codigoProveedor, numeroFactura, fechaFactura, moneda, tipoMaterial, cvtaProveedor, importeFOB);
     }
     catch (WebDriverTimeoutException ex)
     {
@@ -125,4 +128,5 @@ public void Teardown()
         }
         _driver.Quit();
     }
+}
 }
