@@ -4,11 +4,9 @@ using System;
 using System.Linq;
 using System.Threading;
 
-public class PanelGestionCarpetaImportacionPage
-{
-    private readonly IWebDriver _driver; private readonly WebDriverWait _wait;
-    // Constructor con tiempo de espera de 20 segundos
-    public PanelGestionCarpetaImportacionPage(IWebDriver driver)
+
+// Constructor con tiempo de espera de 20 segundos
+public PanelGestionCarpetaImportacionPage(IWebDriver driver)
 {
     _driver = driver;
     _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
@@ -26,6 +24,7 @@ private IWebElement CampoNumeroFactura => _driver.FindElement(By.Id("CphContenid
 private IWebElement CampoFechaFactura => _driver.FindElement(By.Id("CphContenido_txtFechaFacturaEdit"));
 private IWebElement DdlTipoMaterial => _driver.FindElement(By.Id("CphContenido_ddlTipoMaterial"));
 private IWebElement DdlCvtaProveedor => _driver.FindElement(By.Id("CphContenido_dllCVtaProveedor"));
+private IWebElement DdlClienteInterno => _driver.FindElement(By.Id("CphContenido_dllClienteInterno"));
 private IWebElement CampoMoneda => _driver.FindElement(By.Id("CphContenido_txtMoneda"));
 private IWebElement BotonGuardarFactura => _driver.FindElement(By.Id("CphContenido_lnkUpdateFactura"));
 private IWebElement MensajeExito => _driver.FindElement(By.Id("CphContenido_divMensaje"));
@@ -204,15 +203,50 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
         }
         catch (ElementNotInteractableException)
         {
-            // Intentar clic para desplegar (si es un control personalizado como Select2)
             Console.WriteLine("Intentando desplegar dllCVtaProveedor con clic...");
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", DdlCvtaProveedor);
             Thread.Sleep(500); // Esperar que el menú se despliegue
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", DdlCvtaProveedor, cvtaProveedor);
         }
 
+        // Cliente Interno
+        _wait.Until(d => DdlClienteInterno.Displayed && DdlClienteInterno.Enabled);
+        _wait.Until(d => new SelectElement(DdlClienteInterno).Options.Count > 0);
+        try
+        {
+            // Depuración: Mostrar opciones disponibles
+            var selectClienteInterno = new SelectElement(DdlClienteInterno);
+            var opcionesClienteInterno = selectClienteInterno.Options.Select(o => $"value='{o.GetAttribute("value")}', text='{o.Text}'").ToList();
+            Console.WriteLine($"Opciones disponibles en dllClienteInterno: {string.Join(" | ", opcionesClienteInterno)}");
+
+            // Intentar seleccionar el valor "1"
+            string clienteInterno = "1";
+            if (selectClienteInterno.Options.Any(o => o.GetAttribute("value") == clienteInterno))
+            {
+                selectClienteInterno.SelectByValue(clienteInterno);
+                Console.WriteLine($"Seleccionado clienteInterno: {clienteInterno}");
+            }
+            else if (selectClienteInterno.Options.Any())
+            {
+                string primeraOpcion = selectClienteInterno.Options.First().GetAttribute("value");
+                Console.WriteLine($"Valor {clienteInterno} no encontrado en dllClienteInterno. Seleccionando primera opción: {primeraOpcion}");
+                selectClienteInterno.SelectByValue(primeraOpcion);
+            }
+            else
+            {
+                throw new NoSuchElementException("El dropdown dllClienteInterno no tiene opciones disponibles.");
+            }
+        }
+        catch (ElementNotInteractableException)
+        {
+            Console.WriteLine("Intentando desplegar dllClienteInterno con clic...");
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", DdlClienteInterno);
+            Thread.Sleep(500); // Esperar que el menú se despliegue
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", DdlClienteInterno, "1");
+        }
+
         // Total FOB (Importe FOB)
-       /* _wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
+        _wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
         try
         {
             CampoImporteFOB.Clear();
@@ -222,7 +256,7 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
         {
             Console.WriteLine("Usando JavaScript para llenar txtImporteFOB...");
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", CampoImporteFOB, importeFOB);
-        }*/
+        }
 
         // Clic en "Carga Manual" para habilitar detalle de factura
         Console.WriteLine("Buscando botón Carga Manual...");
@@ -338,6 +372,4 @@ public string ObtenerValorCvtaProveedor()
     Console.WriteLine("Validando C.Vta.Proveedor...");
     _wait.Until(d => DdlCvtaProveedor.Displayed);
     return new SelectElement(DdlCvtaProveedor).SelectedOption.GetAttribute("value");
-}
-
 }
