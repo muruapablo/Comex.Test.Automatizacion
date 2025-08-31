@@ -212,7 +212,7 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
         }
 
         // Total FOB (Importe FOB)
-        _wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
+       /* _wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
         try
         {
             CampoImporteFOB.Clear();
@@ -222,7 +222,7 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
         {
             Console.WriteLine("Usando JavaScript para llenar txtImporteFOB...");
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", CampoImporteFOB, importeFOB);
-        }
+        }*/
 
         // Clic en "Carga Manual" para habilitar detalle de factura
         Console.WriteLine("Buscando botón Carga Manual...");
