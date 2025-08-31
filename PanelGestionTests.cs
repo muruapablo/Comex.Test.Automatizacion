@@ -82,8 +82,8 @@ public void CrearFactura_ValidarCamposYVerificarAlReabrir()
     string codigoProveedor = "1102"; // Ajusta a un proveedor válido
     string moneda = "040"; // Ajusta
     string fechaFactura = ""; // Formato dd/MM/yyyy
-    string tipoMaterial = "Material Productivo"; // Valor de DDL, ajusta según opciones reales
-    string cvtaProveedor = "FOB"; // Valor esperado para validar
+    string tipoMaterial = "1"; // Valor de DDL, ajusta según opciones reales
+    string cvtaProveedor = "004"; // Valor esperado para validar
     string importeFOB = ""; // Formato con 4 decimales para Total FOB
 
     // 8. Crear factura
