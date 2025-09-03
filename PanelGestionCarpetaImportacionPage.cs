@@ -5,8 +5,38 @@ using System.Linq;
 using System.Threading;
 
 
-// Constructor con tiempo de espera de 20 segundos
-public PanelGestionCarpetaImportacionPage(IWebDriver driver)
+namespace Comex.Test.Automatizacion.Pages
+{
+    public class PanelgestionCarpetaImportacionPage
+    {
+        private readonly IWebDriver driver;
+        private readonly WebDriverWait wait;
+
+        public PanelgestionCarpetaImportacionPage(IWebDriver driver)
+        {
+            this.driver = driver;
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        }
+
+        private IWebElement GestionFacturasBtn => wait.Until(d => d.FindElement(By.Id("CphContenido_lnkGestionFacturasImp")));
+
+        public void IrAGestionFacturas()
+        {
+            GestionFacturasBtn.Click();
+        }
+    }
+}
+
+
+
+
+
+
+public class PanelGestionCarpetaImportacionPage
+{
+    private readonly IWebDriver _driver; private readonly WebDriverWait _wait;
+    // Constructor con tiempo de espera de 20 segundos
+    public PanelGestionCarpetaImportacionPage(IWebDriver driver)
 {
     _driver = driver;
     _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
@@ -245,131 +275,132 @@ public void CrearFactura(string codigoProveedor, string numeroFactura, string fe
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", DdlClienteInterno, "1");
         }
 
-        // Total FOB (Importe FOB)
-        _wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
-        try
-        {
-            CampoImporteFOB.Clear();
-            CampoImporteFOB.SendKeys(importeFOB);
-        }
-        catch (ElementNotInteractableException)
-        {
-            Console.WriteLine("Usando JavaScript para llenar txtImporteFOB...");
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", CampoImporteFOB, importeFOB);
-        }
+// Total FOB (Importe FOB)
+/*_wait.Until(d => CampoImporteFOB.Displayed && CampoImporteFOB.Enabled);
+try
+{
+    CampoImporteFOB.Clear();
+    CampoImporteFOB.SendKeys(importeFOB);
+}
+catch (ElementNotInteractableException)
+{
+    Console.WriteLine("Usando JavaScript para llenar txtImporteFOB...");
+    ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = arguments[1];", CampoImporteFOB, importeFOB);
+}
+*/
+// Clic en "Carga Manual" para habilitar detalle de factura
+Console.WriteLine("Buscando botón Carga Manual...");
+try
+{
+    // Verificar si el botón existe
+    var boton = _driver.FindElement(By.Id("CphContenido_lnkCargaManual"));
+    Console.WriteLine("Botón Carga Manual encontrado. Verificando visibilidad y estado...");
 
-        // Clic en "Carga Manual" para habilitar detalle de factura
-        Console.WriteLine("Buscando botón Carga Manual...");
-        try
-        {
-            // Verificar si el botón existe
-            var boton = _driver.FindElement(By.Id("CphContenido_lnkCargaManual"));
-            Console.WriteLine("Botón Carga Manual encontrado. Verificando visibilidad y estado...");
+    // Hacer scroll al botón
+    ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", boton);
+    Thread.Sleep(500); // Esperar que el scroll se complete
 
-            // Hacer scroll al botón
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", boton);
-            Thread.Sleep(500); // Esperar que el scroll se complete
+    // Esperar que el botón esté visible y habilitado
+    _wait.Until(d => boton.Displayed && boton.Enabled);
+    Console.WriteLine("Botón Carga Manual visible y habilitado. Pulsando...");
 
-            // Esperar que el botón esté visible y habilitado
-            _wait.Until(d => boton.Displayed && boton.Enabled);
-            Console.WriteLine("Botón Carga Manual visible y habilitado. Pulsando...");
-
-            try
-            {
-                boton.Click();
-            }
-            catch (ElementNotInteractableException)
-            {
-                Console.WriteLine("Usando JavaScript para pulsar lnkCargaManual...");
-                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", boton);
-            }
-        }
-        catch (NoSuchElementException)
-        {
-            Console.WriteLine("Error: No se encontró el botón CphContenido_lnkCargaManual.");
-            ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_boton_carga_manual_no_encontrado.png");
-            throw;
-        }
-
-        // Esperar que el modal/sección de detalle sea visible (asumiendo un modal genérico)
-        try
-        {
-            Console.WriteLine("Esperando sección de detalle de factura...");
-            IWebElement seccionDetalle = _wait.Until(d => d.FindElement(By.CssSelector(".modal-dialog, #CphContenido_modalEditarFactura div")));
-            _wait.Until(d => seccionDetalle.Displayed);
-            Console.WriteLine("Sección de detalle visible.");
-        }
-        catch (WebDriverTimeoutException)
-        {
-            Console.WriteLine("No se detectó modal/sección de detalle, asumiendo que no requiere interacción adicional.");
-        }
-
-        // Guardar factura
-        Console.WriteLine("Guardando factura...");
-        try
-        {
-            // Hacer scroll al botón Guardar
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", BotonGuardarFactura);
-            Thread.Sleep(500); // Esperar que el scroll se complete
-
-            _wait.Until(d => BotonGuardarFactura.Displayed && BotonGuardarFactura.Enabled);
-            BotonGuardarFactura.Click();
-        }
-        catch (ElementNotInteractableException)
-        {
-            Console.WriteLine("Usando JavaScript para pulsar lnkUpdateFactura...");
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", BotonGuardarFactura);
-        }
-    }
-    catch (WebDriverTimeoutException ex)
+    try
     {
-        Console.WriteLine($"Timeout en CrearFactura: {ex.Message}");
-        ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_crear_factura_timeout.png");
-        throw;
+        boton.Click();
     }
-    catch (Exception ex)
+    catch (ElementNotInteractableException)
     {
-        Console.WriteLine($"Error en CrearFactura: {ex.Message}");
-        ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_crear_factura_general.png");
-        throw;
+        Console.WriteLine("Usando JavaScript para pulsar lnkCargaManual...");
+        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", boton);
     }
+}
+catch (NoSuchElementException)
+{
+    Console.WriteLine("Error: No se encontró el botón CphContenido_lnkCargaManual.");
+    ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_boton_carga_manual_no_encontrado.png");
+    throw;
+}
+
+// Esperar que el modal/sección de detalle sea visible (asumiendo un modal genérico)
+try
+{
+    Console.WriteLine("Esperando sección de detalle de factura...");
+    IWebElement seccionDetalle = _wait.Until(d => d.FindElement(By.CssSelector(".modal-dialog, #CphContenido_modalEditarFactura div")));
+    _wait.Until(d => seccionDetalle.Displayed);
+    Console.WriteLine("Sección de detalle visible.");
+}
+catch (WebDriverTimeoutException)
+{
+    Console.WriteLine("No se detectó modal/sección de detalle, asumiendo que no requiere interacción adicional.");
+}
+
+// Guardar factura
+Console.WriteLine("Guardando factura...");
+try
+{
+    // Hacer scroll al botón Guardar
+    ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", BotonGuardarFactura);
+    Thread.Sleep(500); // Esperar que el scroll se complete
+
+    _wait.Until(d => BotonGuardarFactura.Displayed && BotonGuardarFactura.Enabled);
+    BotonGuardarFactura.Click();
+}
+catch (ElementNotInteractableException)
+{
+    Console.WriteLine("Usando JavaScript para pulsar lnkUpdateFactura...");
+    ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", BotonGuardarFactura);
+}
+}
+catch (WebDriverTimeoutException ex)
+{
+Console.WriteLine($"Timeout en CrearFactura: {ex.Message}");
+((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_crear_factura_timeout.png");
+throw;
+}
+catch (Exception ex)
+{
+Console.WriteLine($"Error en CrearFactura: {ex.Message}");
+((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("error_crear_factura_general.png");
+throw;
+}
 }
 
 public bool EsMensajeExitoVisible()
 {
-    try
-    {
-        Console.WriteLine("Verificando mensaje de éxito...");
-        _wait.Until(d => MensajeExito.Displayed);
-        return MensajeExito.Text.ToLower().Contains("creada") || MensajeExito.Text.ToLower().Contains("éxito");
-    }
-    catch
-    {
-        return false;
-    }
+try
+{
+Console.WriteLine("Verificando mensaje de éxito...");
+_wait.Until(d => MensajeExito.Displayed);
+return MensajeExito.Text.ToLower().Contains("creada") || MensajeExito.Text.ToLower().Contains("éxito");
+}
+catch
+{
+return false;
+}
 }
 
 public void BuscarPorNumeroFactura(string numeroFactura)
 {
-    Console.WriteLine("Buscando factura por número...");
-    CampoFiltroNumeroFactura.Clear();
-    CampoFiltroNumeroFactura.SendKeys(numeroFactura);
-    _wait.Until(d => BotonBuscar.Displayed && BotonBuscar.Enabled);
-    BotonBuscar.Click();
-    _wait.Until(d => GrillaResultados.Displayed);
+Console.WriteLine("Buscando factura por número...");
+CampoFiltroNumeroFactura.Clear();
+CampoFiltroNumeroFactura.SendKeys(numeroFactura);
+_wait.Until(d => BotonBuscar.Displayed && BotonBuscar.Enabled);
+BotonBuscar.Click();
+_wait.Until(d => GrillaResultados.Displayed);
 }
 
 public void AbrirFacturaParaEdicion()
 {
-    Console.WriteLine("Abriendo factura para edición...");
-    _wait.Until(d => IconoEditarEnGrilla.Displayed && IconoEditarEnGrilla.Enabled);
-    IconoEditarEnGrilla.Click();
-    _wait.Until(d => ModalEditarFactura.Displayed && ModalEditarFactura.GetAttribute("style").Contains("display: block"));
+Console.WriteLine("Abriendo factura para edición...");
+_wait.Until(d => IconoEditarEnGrilla.Displayed && IconoEditarEnGrilla.Enabled);
+IconoEditarEnGrilla.Click();
+_wait.Until(d => ModalEditarFactura.Displayed && ModalEditarFactura.GetAttribute("style").Contains("display: block"));
 }
 
 public string ObtenerValorCvtaProveedor()
 {
-    Console.WriteLine("Validando C.Vta.Proveedor...");
-    _wait.Until(d => DdlCvtaProveedor.Displayed);
-    return new SelectElement(DdlCvtaProveedor).SelectedOption.GetAttribute("value");
+Console.WriteLine("Validando C.Vta.Proveedor...");
+_wait.Until(d => DdlCvtaProveedor.Displayed);
+return new SelectElement(DdlCvtaProveedor).SelectedOption.GetAttribute("value");
+}
 }

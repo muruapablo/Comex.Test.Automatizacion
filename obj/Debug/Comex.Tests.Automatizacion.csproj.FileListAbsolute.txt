@@ -1,3 +1,7 @@
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\NUnit3.TestAdapter.dll
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\NUnit3.TestAdapter.pdb
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.engine.dll
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.engine.api.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\es\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\es\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\es\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
@@ -11,11 +15,13 @@ C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Comex.Tests.Automatizacion.pdb
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.framework.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\WebDriver.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\WebDriver.Support.dll
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
-C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.AssemblyReference.cache
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.framework.pdb
+C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.framework.xml
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.CoreCompileInputs.cache
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.CopyComplete
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.dll
