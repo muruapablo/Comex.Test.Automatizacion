@@ -12,7 +12,7 @@ namespace Comex.Test.Automatizacion.Pages
         public LoginPage(IWebDriver driver)
         {
             this.driver = driver;
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
         }
 
         private IWebElement SuraIcon => wait.Until(d => d.FindElement(By.CssSelector("div:nth-of-type(7) img")));
