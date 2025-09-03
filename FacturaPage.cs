@@ -35,12 +35,14 @@ namespace Comex.Test.Automatizacion.Pages
             CondicionVenta.Click();
             CondicionVenta.SendKeys(condicion + Keys.Enter);
             Thread.Sleep(1000);
-            ProfitCenter.SendKeys(profit);
+            ProfitCenter.Click();
+            ProfitCenter.SendKeys(profit + Keys.Enter);
             CentroCosto.Click();
+            Thread.Sleep(300);
             CentroCosto.SendKeys(centroCosto + Keys.Enter);
             Thread.Sleep(1000);
             Fecha.SendKeys(fecha);
-            //Thread.Sleep(2000);
+            Thread.Sleep(500);
 
         }
 

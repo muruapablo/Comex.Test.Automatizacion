@@ -22,7 +22,6 @@ C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.framework.pdb
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\bin\Debug\nunit.framework.xml
-C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.AssemblyReference.cache
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.CoreCompileInputs.cache
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.csproj.CopyComplete
 C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\obj\Debug\Comex.Tests.Automatizacion.dll

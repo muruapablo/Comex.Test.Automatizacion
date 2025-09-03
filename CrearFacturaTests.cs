@@ -6,7 +6,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-
 namespace Comex.Tests.Automatizacion
 {
     [TestFixture]
@@ -26,56 +25,83 @@ namespace Comex.Tests.Automatizacion
         }
 
         [Test]
-        public void CrearFactura_ManualYMasiva()
+        public void CrearFactura_CargaManual()
         {
-            // 1. Abrir la aplicación
+            // 1. Navegar y login
             driver.Navigate().GoToUrl("http://localhost:62063/PrincipalNuevo.aspx");
-            Console.WriteLine("Página cargada. Intentando login...");
-
-            // 2. Login
             var loginPage = new LoginPage(driver);
             loginPage.Login("SF77332", "Jul*Arg$2025");
 
-            // 3. Ejecutar AutoIt para el proxy
-            EjecutarProxyAuth();
+            // 2. Proxy
+           // EjecutarProxyAuth();
 
-            // 4. Ir a menú → Panel Gestión Carpeta de Importación
+            // 3. Panel de gestión
             var menu = new MainMenuPage(driver);
             menu.IrAPanelGestionCarpeta();
 
-            // 5. Ir a Gestión Facturas → Crear factura
             var gestionFacturas = new GestionFacturasPage(driver);
             gestionFacturas.IrAGestionFacturas();
             gestionFacturas.ClickCrearFactura();
 
-            // 6. Completar cabecera factura
+            // 4. Cabecera factura
             var facturaPage = new FacturaPage(driver);
             facturaPage.CompletarDatosFactura(
-                "SEP00037A", "1102", "SURA",
-                "040", "FCA", "C51I", "C51I001", ""
+                "SEP00038F", "1102", "SURA",
+                "040", "FCA", "CO", "C5", ""
             );
 
-            // 7. Carga manual detalle
+            // 5. Carga manual
             facturaPage.IrCargaManual();
             var detallePage = new FacturaDetallePage(driver);
             detallePage.AgregarDetalle("10000", "0.0154", "0.0154", "8000000-303");
 
-            // 8. Carga masiva
+            // 6. Guardar
+            facturaPage.Guardar();
+
+            Assert.That(driver.Url, Does.Contain("PanelGestionCarpetaImportacion.aspx"));
+        }
+
+        [Test]
+        public void CrearFactura_CargaMasiva()
+        {
+            // 1. Navegar y login
+            driver.Navigate().GoToUrl("http://localhost:62063/PrincipalNuevo.aspx");
+            var loginPage = new LoginPage(driver);
+            loginPage.Login("SF77332", "Jul*Arg$2025");
+
+            // 2. Proxy
+            //EjecutarProxyAuth();
+
+            // 3. Panel de gestión
+            var menu = new MainMenuPage(driver);
+            menu.IrAPanelGestionCarpeta();
+
+            var gestionFacturas = new GestionFacturasPage(driver);
+            gestionFacturas.IrAGestionFacturas();
+            gestionFacturas.ClickCrearFactura();
+
+            // 4. Cabecera factura
+            var facturaPage = new FacturaPage(driver);
+            facturaPage.CompletarDatosFactura(
+                "SEP00038B", "1102", "SURA",
+                "040", "FCA", "CO", "C5", ""
+            );
+
+            // 5. Carga masiva
             facturaPage.IrCargaMasiva();
             driver.FindElement(By.Id("CphContenido_fileUpDetalleExcel"))
                   .SendKeys(@"C:\Users\Pedro Hernadez\Downloads\Modelo_cargas_Masivas.xls");
             driver.FindElement(By.Id("CphContenido_lnkGenerarDetalleExcel")).Click();
 
-            // 9. Guardar factura
+            // 6. Guardar
             facturaPage.Guardar();
 
-            // 10. Validación
             Assert.That(driver.Url, Does.Contain("PanelGestionCarpetaImportacion.aspx"));
         }
 
-        private void EjecutarProxyAuth()
+       /* private void EjecutarProxyAuth()
         {
-            string autoItScript = @"C:\Users\Pedro Hernadez\Documents\GitHub\COMEXWEB\Comex.Tests.Automatizacion\Documents\ChromeProxyAuth.exe";
+            string autoItScript = @"C:\Scripts\ChromeProxyAuth.exe";
 
             if (File.Exists(autoItScript))
             {
@@ -87,7 +113,7 @@ namespace Comex.Tests.Automatizacion
                 Console.WriteLine(" No se encontró el ejecutable AutoIt en: " + autoItScript);
             }
         }
-
+       */
         [TearDown]
         public void TearDown()
         {
