@@ -34,5 +34,10 @@ namespace Comex.Test.Automatizacion.Pages
 
             BtnIngresar.Click();
         }
+
+
+
+
+
     }
 }
