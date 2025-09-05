@@ -17,11 +17,10 @@ namespace Comex.Tests.Automatizacion
         {
             var service = ChromeDriverService.CreateDefaultService();
             var options = new ChromeOptions();
-
-
-
             options.AddArgument("start-maximized");
             options.AddArgument("ignore-certificate-errors");
+            //  Perfil exclusivo para Selenium
+            options.AddArgument(@"--user-data-dir=C:\Users\Pedro Hernadez\AppData\Local\Google\Chrome\User Data\SeleniumProfile");
 
             driver = new ChromeDriver(service, options, TimeSpan.FromSeconds(60));
         }
@@ -38,7 +37,7 @@ namespace Comex.Tests.Automatizacion
 
             // 3. Panel de gestión
             var menu = new MainMenuPage(driver);
-            menu.IrAPanelGestionCarpeta();
+            menu.IrAPanelGestionCarpetaSura();
 
             var gestionFacturas = new GestionFacturasPage(driver);
             gestionFacturas.IrAGestionFacturas();
@@ -47,7 +46,7 @@ namespace Comex.Tests.Automatizacion
             // 4. Cabecera factura
             var facturaPage = new FacturaPage(driver);
             facturaPage.CompletarDatosFactura(
-                "SEP00038H", "1102", "SURA",
+                "SEP00038J", "1102", "SURA",
                 "040", "FCA", "CO", "C5", ""
             );
 
@@ -73,7 +72,7 @@ namespace Comex.Tests.Automatizacion
 
             // 3. Panel de gestión
             var menu = new MainMenuPage(driver);
-            menu.IrAPanelGestionCarpeta();
+            menu.IrAPanelGestionCarpetaSura();
 
             var gestionFacturas = new GestionFacturasPage(driver);
             gestionFacturas.IrAGestionFacturas();
@@ -82,7 +81,7 @@ namespace Comex.Tests.Automatizacion
             // 4. Cabecera factura
             var facturaPage = new FacturaPage(driver);
             facturaPage.CompletarDatosFactura(
-                "SEP00038B", "1102", "SURA",
+                "SEP00038M", "1102", "SURA",
                 "040", "FCA", "CO", "C5", ""
             );
 
@@ -97,6 +96,62 @@ namespace Comex.Tests.Automatizacion
 
             Assert.That(driver.Url, Does.Contain("PanelGestionCarpetaImportacion.aspx"));
         }
+
+        [Test]
+        public void CrearFactura_FCA_CargaManual()
+        {
+            driver.Navigate().GoToUrl("http://172.18.42.103/comexweb/Login.FIAT.aspx");
+
+            var loginPage = new LoginPage(driver);
+            loginPage.LoginFCA("SF77332", "Jul*Arg$2025");
+
+            var menu = new MainMenuPage(driver);
+            menu.IrAPanelGestionCarpetaFCA();
+            menu.IrAGestionFacturasFCA();
+            var gestionFacturas = new GestionFacturasPage(driver);
+            gestionFacturas.ClickCrearFactura();
+
+            var facturaPage = new FacturaPageFCA(driver);
+            facturaPage.CompletarDatosFacturaFCA(
+                "SEP00099I", "15614", "Fiat",  // Cliente Interno = Fiat
+                "040", "FCA", ""//DateTime.Today.ToString("dd/MM/yyyy")
+            );
+
+            facturaPage.IrCargaManual();
+            var detallePage = new FacturaDetallePage(driver);
+            detallePage.AgregarDetalle("20000", "0.0200", "0.0250", "0000000401");
+            facturaPage.Guardar();
+        }
+
+        [Test]
+        public void CrearFactura_FCA_CargaMasiva()
+        {
+            driver.Navigate().GoToUrl("http://172.18.42.103/comexweb/Login.FIAT.aspx");
+
+            var loginPage = new LoginPage(driver);
+            loginPage.LoginFCA("SF77332", "Jul*Arg$2025");
+
+            var menu = new MainMenuPage(driver);
+            menu.IrAPanelGestionCarpetaFCA();
+            menu.IrAGestionFacturasFCA();
+            var gestionFacturas = new GestionFacturasPage(driver);
+           
+            gestionFacturas.ClickCrearFactura();
+
+            var facturaPage = new FacturaPageFCA(driver);
+            facturaPage.CompletarDatosFacturaFCA(
+                "SEP00099M2", "15614", "Fiat",
+                "040", "FCA", ""//DateTime.Today.ToString("dd/MM/yyyy")
+            );
+
+            facturaPage.IrCargaMasiva();
+            driver.FindElement(By.Id("CphContenido_fileUpDetalleExcel"))
+                  .SendKeys(@"C:\Users\Pedro Hernadez\Downloads\Modelo_cargas_Masivas.xls");
+            driver.FindElement(By.Id("CphContenido_lnkGenerarDetalleExcel")).Click();
+
+            facturaPage.Guardar();
+        }
+
 
 
         [TearDown]

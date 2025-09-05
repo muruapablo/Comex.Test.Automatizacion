@@ -18,6 +18,10 @@ namespace Comex.Test.Automatizacion.Pages
         private IWebElement SuraIcon => wait.Until(d => d.FindElement(By.CssSelector("div:nth-of-type(7) img")));
         private IWebElement Usuario => wait.Until(d => d.FindElement(By.Id("TxtLoginUsuario")));
         private IWebElement Contrasena => wait.Until(d => d.FindElement(By.Id("TxtLoginContrasena")));
+
+        private IWebElement UsuarioFCA => wait.Until(d => d.FindElement(By.Id("TxtLoginUsuario")));
+        private IWebElement ContrasenaFCA => wait.Until(d => d.FindElement(By.Id("TxtLoginContrasena")));
+
         private IWebElement BtnIngresar => wait.Until(d => d.FindElement(By.Id("CmdLogin")));
 
         public void Login(string user, string pass)
@@ -35,7 +39,18 @@ namespace Comex.Test.Automatizacion.Pages
             BtnIngresar.Click();
         }
 
+        public void LoginFCA(string user, string pass)
+        {
+            driver.Navigate().GoToUrl("http://172.18.42.103/comexweb/Login.FIAT.aspx");
 
+            wait.Until(d => Usuario.Displayed && Usuario.Enabled);
+            UsuarioFCA.Clear();
+            UsuarioFCA.SendKeys(user);
+
+            ContrasenaFCA.Clear();
+            ContrasenaFCA.SendKeys(pass);
+            BtnIngresar.Click();
+        }
 
 
 
